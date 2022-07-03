@@ -12,14 +12,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="altitude"    column="altitude"    />
         <result property="speed"    column="speed"    />
         <result property="direction"    column="direction"    />
-        <result property="dateTime"    column="createtime"    />
-        <result property="clientId"    column="sn"    />
+        <result property="dateTime"    column="dateTime"    />
+        <result property="clientId"    column="clientId"    />
+        <result property="messageId"    column="messageId"    />
+        <result property="serialNo"    column="serialNo"    />
+        <result property="protocolVersion"    column="protocolVersion"    />
 
     </resultMap>
 
     <sql id="selectT0200Vo">
         select id,warnBit,statusBit,latitude,longitude,altitude,speed,direction,dateTime,attributes,createtime,modifytime,
-        creater,updated,sn from T0200
+        creater,updated,clientId ,serialNo,protocolVersion ,messageId from T0200
     </sql>
 
     <select id="selectT0200List" parameterType="T0200" resultMap="T0200Result">
@@ -58,8 +61,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="altitude != null">altitude,</if>
             <if test="speed != null">speed,</if>
             <if test="direction != null">direction,</if>
-            <if test="dateTime != null">createtime,</if>
-            <if test="clientId != null">sn,</if>
+            <if test="dateTime != null">dateTime,</if>
+            <if test="clientId != null">clientId,</if>
+            <if test="messageId != null">messageId,</if>
+            <if test="serialNo != null">serialNo,</if>
+            <if test="protocolVersion != null">protocolVersion,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="warnBit != null and warnBit != ''">#{warnBit},</if>
@@ -71,6 +77,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="direction != null">#{direction},</if>
             <if test="dateTime != null">#{dateTime},</if>
             <if test="clientId != null">#{clientId},</if>
+            <if test="messageId != null">#{messageId},</if>
+            <if test="serialNo != null">#{serialNo},</if>
+            <if test="protocolVersion != null">#{protocolVersion},</if>
          </trim>
     </insert>
 
