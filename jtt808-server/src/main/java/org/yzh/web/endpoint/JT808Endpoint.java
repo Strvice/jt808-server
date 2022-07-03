@@ -15,6 +15,7 @@ import org.yzh.protocol.t808.*;
 import org.yzh.web.model.enums.SessionKey;
 import org.yzh.web.model.vo.DeviceInfo;
 import org.yzh.web.service.FileService;
+import org.yzh.web.service.IT0200Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -30,6 +31,8 @@ public class JT808Endpoint {
 
     @Autowired
     private FileService fileService;
+    @Autowired
+    private IT0200Service it0200Service;
 
     @Mapping(types = 终端通用应答, desc = "终端通用应答")
     public Object generalResponse(T0001 message, Session session) {
@@ -107,6 +110,11 @@ public class JT808Endpoint {
     @AsyncBatch(poolSize = 2, maxElements = 4000, maxWait = 1000)
     @Mapping(types = 位置信息汇报, desc = "位置信息汇报")
     public void locationReport(List<T0200> list) {
+        for (T0200 t0200:list
+             ) {
+            it0200Service.insertT0200(t0200);
+//            System.out.println("++++"+t0200.getAttributes().get());
+        }
     }
 
     @Mapping(types = 定位数据批量上传, desc = "定位数据批量上传")

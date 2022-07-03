@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yzh.web.mapper.T0200Mapper">
+
+    <resultMap type="T0200" id="T0200Result">
+        <result property="warnBit"    column="warnBit"    />
+        <result property="statusBit"    column="statusBit"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="altitude"    column="altitude"    />
+        <result property="speed"    column="speed"    />
+        <result property="direction"    column="direction"    />
+        <result property="dateTime"    column="createtime"    />
+        <result property="clientId"    column="sn"    />
+
+    </resultMap>
+
+    <sql id="selectT0200Vo">
+        select id,warnBit,statusBit,latitude,longitude,altitude,speed,direction,dateTime,attributes,createtime,modifytime,
+        creater,updated,sn from T0200
+    </sql>
+
+    <select id="selectT0200List" parameterType="T0200" resultMap="T0200Result">
+        <include refid="selectT0200Vo"/>
+        <where>  
+            <if test="warnBit != null  and warnBit != ''"> and warnBit = #{warnBit}</if>
+            <if test="statusBit != null  and statusBit != ''"> and statusBit = #{statusBit}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="altitude != null  and altitude != ''"> and altitude = #{altitude}</if>
+            <if test="speed != null  and speed != ''"> and speed = #{speed}</if>
+            <if test="direction != null  and direction != ''"> and direction = #{direction}</if>
+            <if test="dateTime != null  and dateTime != ''"> and dateTime = #{dateTime}</if>
+            <if test="attributes != null  and attributes != ''"> and attributes = #{attributes}</if>
+            <if test="createtime != null  and createtime != '' and createtime != 0"> and createtime = #{createtime}</if>
+            <if test="modifytime != null  and modifytime != '' and modifytime != 0"> and modifytime = #{modifytime}</if>
+            <if test="creater != null  and creater != '' and creater != 0"> and creater = #{creater}</if>
+            <if test="updated != null  and updated != '' and updated != 0"> and updated = #{updated}</if>
+            <if test="sn != null  and sn != '' and sn != 0"> and sn = #{sn}</if>
+        </where>
+        ORDER BY createtime desc
+    </select>
+    
+    <select id="selectT0200ById" parameterType="Long"  resultMap="T0200Result">
+        <include refid="selectT0200Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertT0200" parameterType="T0200">
+        insert into T0200
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warnBit != null and warnBit != ''">warnBit,</if>
+            <if test="statusBit != null">statusBit,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="altitude != null">altitude,</if>
+            <if test="speed != null">speed,</if>
+            <if test="direction != null">direction,</if>
+            <if test="dateTime != null">createtime,</if>
+            <if test="clientId != null">sn,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warnBit != null and warnBit != ''">#{warnBit},</if>
+            <if test="statusBit != null">#{statusBit},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="altitude != null">#{altitude},</if>
+            <if test="speed != null">#{speed},</if>
+            <if test="direction != null">#{direction},</if>
+            <if test="dateTime != null">#{dateTime},</if>
+            <if test="clientId != null">#{clientId},</if>
+         </trim>
+    </insert>
+
+    <insert id="saveBatchReport"  parameterType="java.util.List">
+            insert into user_transportation_report (pointOfOriginProvince,placeOfDispatch,theArrivalOfTheGoodsToTheProvince,withTheArrivalOfTheGoods
+            ,theCarrierNumber,licensePlateNumber,wayTo,departureTime,numberOfCases,totalNumberOfPackages) values
+            <foreach item="item" index="index" collection="list" separator="," close=";">
+               ( #{item.pointOfOriginProvince},#{item.placeOfDispatch},#{item.theArrivalOfTheGoodsToTheProvince},#{item.withTheArrivalOfTheGoods},
+                #{item.theCarrierNumber},#{item.licensePlateNumber},#{item.wayTo},#{item.departureTime},#{item.numberOfCases},#{item.totalNumberOfPackages})
+            </foreach>
+        </insert>
+
+    <select id="queryNum" resultMap="T0200Result">
+        select theCarrierNumber from user_transportation_report GROUP BY theCarrierNumber HAVING COUNT(theCarrierNumber)>1
+    </select>
+
+    <update id="updateT0200" parameterType="T0200">
+        update user_transportation_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pointOfOriginProvince != null and pointOfOriginProvince != ''">pointOfOriginProvince = #{pointOfOriginProvince},</if>
+            <if test="placeOfDispatch != null">placeOfDispatch = #{placeOfDispatch},</if>
+            <if test="theArrivalOfTheGoodsToTheProvince != null">theArrivalOfTheGoodsToTheProvince = #{theArrivalOfTheGoodsToTheProvince},</if>
+            <if test="withTheArrivalOfTheGoods != null">withTheArrivalOfTheGoods = #{withTheArrivalOfTheGoods},</if>
+            <if test="theCarrierNumber != null">theCarrierNumber = #{theCarrierNumber},</if>
+            <if test="licensePlateNumber != null">licensePlateNumber = #{licensePlateNumber},</if>
+            <if test="wayTo != null">wayTo = #{wayTo},</if>
+            <if test="departureTime != null">departureTime = #{departureTime},</if>
+            <if test="numberOfCases != null">numberOfCases = #{numberOfCases},</if>
+            <if test="totalNumberOfPackages != null">totalNumberOfPackages = #{totalNumberOfPackages},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteT0200ById" parameterType="Long">
+        delete from T0200 where id = #{id}
+    </delete>
+
+    <delete id="deleteT0200ByIds" parameterType="String">
+        delete from T0200 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
