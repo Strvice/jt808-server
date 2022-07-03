@@ -9,9 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.yzh.commons.util.Converter;
+import org.yzh.commons.util.CoordTransform;
+import org.yzh.commons.util.CoordType;
 import org.yzh.protocol.basics.JTMessage;
 import org.yzh.protocol.commons.JT808;
 import org.yzh.protocol.t808.*;
+import org.yzh.web.entity.T0200Entity;
 import org.yzh.web.model.enums.SessionKey;
 import org.yzh.web.model.vo.DeviceInfo;
 import org.yzh.web.service.FileService;
@@ -21,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+import static org.yzh.commons.util.CoordTransform.wgs84togcj02;
 import static org.yzh.protocol.commons.JT808.*;
 
 @Endpoint
@@ -112,7 +117,9 @@ public class JT808Endpoint {
     public void locationReport(List<T0200> list) {
         for (T0200 t0200:list
              ) {
-            it0200Service.insertT0200(t0200);
+            T0200Entity t0200Entity=new T0200Entity(t0200);
+            it0200Service.insertT0200(t0200Entity);
+
 //            System.out.println("++++"+t0200.getAttributes().get());
         }
     }

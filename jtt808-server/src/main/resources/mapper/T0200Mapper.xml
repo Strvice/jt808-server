@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.yzh.web.mapper.T0200Mapper">
 
-    <resultMap type="T0200" id="T0200Result">
+    <resultMap type="T0200Entity" id="T0200EntityResult">
         <result property="warnBit"    column="warnBit"    />
         <result property="statusBit"    column="statusBit"    />
         <result property="latitude"    column="latitude"    />
@@ -21,11 +21,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectT0200Vo">
-        select id,warnBit,statusBit,latitude,longitude,altitude,speed,direction,dateTime,attributes,createtime,modifytime,
-        creater,updated,clientId ,serialNo,protocolVersion ,messageId from T0200
+        select id,warnBit,statusBit,latitude,longitude,altitude,speed,direction,dateTime,attributes,createtime,
+        modifytime,creater,updated,clientId ,serialNo,protocolVersion ,messageId from T0200
     </sql>
 
-    <select id="selectT0200List" parameterType="T0200" resultMap="T0200Result">
+    <select id="selectT0200List" parameterType="T0200Entity" resultMap="T0200EntityResult">
         <include refid="selectT0200Vo"/>
         <where>  
             <if test="warnBit != null  and warnBit != ''"> and warnBit = #{warnBit}</if>
@@ -41,17 +41,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="modifytime != null  and modifytime != '' and modifytime != 0"> and modifytime = #{modifytime}</if>
             <if test="creater != null  and creater != '' and creater != 0"> and creater = #{creater}</if>
             <if test="updated != null  and updated != '' and updated != 0"> and updated = #{updated}</if>
-            <if test="sn != null  and sn != '' and sn != 0"> and sn = #{sn}</if>
+            <if test="clientId != null  and clientId != '' and clientId != 0"> and clientId = #{clientId}</if>
+            <if test="serialNo != null  and serialNo != '' and serialNo != 0"> and serialNo = #{serialNo}</if>
+            <if test="messageId != null  and messageId != '' and messageId != 0"> and messageId = #{messageId}</if>
+            <if test="protocolVersion != null  and protocolVersion != '' and protocolVersion != 0"> and protocolVersion = #{protocolVersion}</if>
         </where>
         ORDER BY createtime desc
     </select>
     
-    <select id="selectT0200ById" parameterType="Long"  resultMap="T0200Result">
+    <select id="selectT0200ByclientId" parameterType="Long"  resultMap="T0200EntityResult">
         <include refid="selectT0200Vo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertT0200" parameterType="T0200">
+    <insert id="insertT0200" parameterType="T0200Entity">
         insert into T0200
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="warnBit != null and warnBit != ''">warnBit,</if>
@@ -83,20 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <insert id="saveBatchReport"  parameterType="java.util.List">
-            insert into user_transportation_report (pointOfOriginProvince,placeOfDispatch,theArrivalOfTheGoodsToTheProvince,withTheArrivalOfTheGoods
-            ,theCarrierNumber,licensePlateNumber,wayTo,departureTime,numberOfCases,totalNumberOfPackages) values
-            <foreach item="item" index="index" collection="list" separator="," close=";">
-               ( #{item.pointOfOriginProvince},#{item.placeOfDispatch},#{item.theArrivalOfTheGoodsToTheProvince},#{item.withTheArrivalOfTheGoods},
-                #{item.theCarrierNumber},#{item.licensePlateNumber},#{item.wayTo},#{item.departureTime},#{item.numberOfCases},#{item.totalNumberOfPackages})
-            </foreach>
-        </insert>
-
-    <select id="queryNum" resultMap="T0200Result">
-        select theCarrierNumber from user_transportation_report GROUP BY theCarrierNumber HAVING COUNT(theCarrierNumber)>1
-    </select>
-
-    <update id="updateT0200" parameterType="T0200">
+    <update id="updateT0200" parameterType="T0200Entity">
         update user_transportation_report
         <trim prefix="SET" suffixOverrides=",">
             <if test="pointOfOriginProvince != null and pointOfOriginProvince != ''">pointOfOriginProvince = #{pointOfOriginProvince},</if>

@@ -46,7 +46,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   # 搜索指定包别名
-  typeAliasesPackage: org.yzh.protocol.t808
+  typeAliasesPackage: org.yzh.web.entity
 server:
   port: 8000
 
