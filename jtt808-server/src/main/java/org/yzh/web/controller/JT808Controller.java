@@ -1,9 +1,11 @@
 package org.yzh.web.controller;
 
+import io.github.yezhihao.netmc.session.Session;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.yzh.commons.model.APICodes;
 import org.yzh.commons.model.APIException;
@@ -17,13 +19,14 @@ import org.yzh.protocol.jsatl12.AlarmId;
 import org.yzh.protocol.jsatl12.T9208;
 import org.yzh.protocol.t808.*;
 import org.yzh.web.endpoint.MessageManager;
+import org.yzh.web.entity.T0200Entity;
 import org.yzh.web.model.vo.Parameters;
 import org.yzh.web.model.vo.Passthroughs;
+import org.yzh.web.service.IT0200Service;
 import reactor.core.publisher.Mono;
 
-import java.util.Base64;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("terminal")
@@ -320,4 +323,11 @@ public class JT808Controller {
         Mono<APIResult<T0A00_8A00>> response = messageManager.requestR(clientId, request, T0A00_8A00.class);
         return response;
     }
+
+
+
+
+
+
+
 }
