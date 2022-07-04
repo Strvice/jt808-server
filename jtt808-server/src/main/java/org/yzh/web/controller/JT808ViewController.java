@@ -35,7 +35,7 @@ public class JT808ViewController {
         });
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("lists", lists);
-        modelAndView.setViewName("/gps.html");
+        modelAndView.setViewName("gps.html");
         return modelAndView;
     }
 }
