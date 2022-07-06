@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="messageId != null  and messageId != '' and messageId != 0"> and messageId = #{messageId}</if>
             <if test="protocolVersion != null  and protocolVersion != '' and protocolVersion != 0"> and protocolVersion = #{protocolVersion}</if>
         </where>
-        ORDER BY dateTime desc
+        ORDER BY dateTime
     </select>
     
     <select id="selectT0200ByclientId" parameterType="Long"  resultMap="T0200EntityResult">
