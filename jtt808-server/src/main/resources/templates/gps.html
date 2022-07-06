@@ -35,12 +35,21 @@
         <input type="button" class="btn" value="停止动画" id="stop" onclick="stopAnimation()"/>
     </div>
 </div>
+
+<script type="text/javascript">
+    window._AMapSecurityConfig = {
+        securityJsCode:'b09368b2efb8d319954b69b7a3b9d1fc',
+    }
+</script>
 <script type="text/javascript"
-        src="https://webapi.amap.com/maps?v=1.4.15&key=6d5e1f4eb20ba74060123f1c44fb0501"></script>
+        src="https://webapi.amap.com/maps?v=1.4.15&key=5a334d518ebb46ee25115aa9b04f16f0&plugin=AMap.Walking"></script>
+<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
 <script th:inline="javascript">
 
     var marker
     let lineArr = [[${lists}]];
+    var arr=[[${lists}]]
 
     var map = new AMap.Map("container", {
         resizeEnable: true,
@@ -51,7 +60,7 @@
     marker = new AMap.Marker({
         map: map,
         position: lineArr[0],
-        icon: "https://webapi.amap.com/images/car.png",
+        icon: "https://webapi.amap.com/theme/v1.3/markers/n/start.png",
         offset: new AMap.Pixel(-26, -13),
         autoRotation: true,
         angle: -90,
@@ -68,6 +77,68 @@
         // strokeStyle: "solid"  //线样式
     });
 
+    //步行导航
+    var walking = new AMap.Walking({
+        map: map,
+        panel: "panel"
+    });
+    //根据起终点坐标规划步行路线
+    walking.search(arr[arr.length-1], [113.805727,34.784755], function(status, result) {
+        // result即是对应的步行路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_WalkingResult
+        if (status === 'complete') {
+            drawRoute(result.routes[0])
+            log.success('绘制步行路线完成')
+        } else {
+            log.error('步行路线数据查询失败' + result)
+        }
+    });
+
+    function drawRoute (route) {
+        var path = parseRouteToPath(route)
+
+        var startMarker = new AMap.Marker({
+            position: path[0],
+            icon: 'https://webapi.amap.com/images/car.png',
+            map: map
+        })
+
+        var endMarker = new AMap.Marker({
+            position: path[path.length - 1],
+            icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png',
+            map: map
+        })
+
+        var routeLine = new AMap.Polyline({
+            path: path,
+            isOutline: true,
+            outlineColor: '#ffeeee',
+            borderWeight: 2,
+            strokeWeight: 5,
+            strokeColor: '#0091ff',
+            lineJoin: 'round'
+        })
+
+        routeLine.setMap(map)
+
+        // 调整视野达到最佳显示区域
+        map.setFitView([ startMarker, endMarker, routeLine ])
+    }
+
+    // 解析WalkRoute对象，构造成AMap.Polyline的path参数需要的格式
+    // WalkRoute对象的结构文档 https://lbs.amap.com/api/javascript-api/reference/route-search#m_WalkRoute
+    function parseRouteToPath(route) {
+        var path = []
+
+        for (var i = 0, l = route.steps.length; i < l; i++) {
+            var step = route.steps[i]
+
+            for (var j = 0, n = step.path.length; j < n; j++) {
+                path.push(step.path[j])
+            }
+        }
+
+        return path
+    }
     var passedPolyline = new AMap.Polyline({
         map: map,
         // path: lineArr,
