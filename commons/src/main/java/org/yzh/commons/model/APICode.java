@@ -9,7 +9,7 @@ public interface APICode {
 
     /** 状态码 */
     int getCode();
-
+//
     /** 状态信息 */
     String getMessage();
 }
